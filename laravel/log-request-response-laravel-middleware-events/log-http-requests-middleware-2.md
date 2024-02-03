@@ -60,7 +60,7 @@ class DatabaseLogger implements HttpLoggerContract
 
 เพราะเราไม่รู้อนาคตว่า requirement เราจะเพิ่มอะไรมาอีก หรือทำมาแล้ว "ไม่เอา" ซะงั้น
 
-<figure><img src="../../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
 
 งั้นก็ใช้ design pattern: decorator แล้วกัน
 
