@@ -7,10 +7,10 @@ coverY: 0
 
 ภารกิจของเราคือ
 
-* สร้าง Project ด้วย Golang
-* Build Image ด้วย Docker และ Upload image ขึ้น AWS ECR Repository
-* สร้าง [Lambda Function](../aws/aws-lambda.md)
-* สร้าง API Gateway เพื่อใช้งาน [Lambda Function](../aws/aws-lambda.md)
+* [สร้าง Project ด้วย Golang](project-golang-lambda.md#project-golang)
+* [Build Image ด้วย Docker และ Upload image ขึ้น AWS ECR Repository](project-golang-lambda.md#build-image-docker-upload-image-registry-aws-ecr)
+* [สร้าง Lambda Function](project-golang-lambda.md#lambda-function-container-image)
+* [สร้าง API Gateway เพื่อใช้งาน Lambda Function](project-golang-lambda.md#api-gateway-lambda-function)
 
 
 
@@ -122,13 +122,46 @@ Command นี้จะทำการ Build Image&#x20;
 
 
 
-3. ต่อไป นำ image tag ที่คุณได้มาติด tag สำหรับ "เตรียมส่งขึ้น" `AWS ECR Repository`:
+3. ต่อไป นำ image tag ที่คุณได้มาติด tag สำหรับ "เตรียมส่งขึ้น" `AWS ECR Repository`
+
+เริ่มโดยคุณต้องไปสร้างที่จัดเก็บ image หรือเรียกอีกชื่อว่า Repository URI ก่อน ด้วยคำสั่ง
+
+```
+aws ecr create-repository \
+    --repository-name my-golang-project \
+    --region <region>
+```
+
+คุณก็จะได้ผลลัพท์ตามนี้
+
+<pre class="language-json" data-line-numbers><code class="lang-json">{
+    "repository": {
+        "repositoryArn": "arn:aws:ecr:&#x3C;region>:&#x3C;aws_account_id>:repository/my-golang-project",
+        "registryId": "&#x3C;aws_account_id>",
+        "repositoryName": "my-golang-project",
+<strong>        "repositoryUri": "&#x3C;aws_account_id>.dkr.ecr.&#x3C;region>.amazonaws.com/my-golang-project",
+</strong>        "createdAt": "2024-02-03T16:00:14.640000+07:00",
+        "imageTagMutability": "MUTABLE",
+        "imageScanningConfiguration": {
+            "scanOnPush": false
+        },
+        "encryptionConfiguration": {
+            "encryptionType": "AES256"
+        }
+    }
+}
+</code></pre>
+
+สังเกตุบรรทัดที่ 6 นะครับ เราจะได้ repositoryUri มา ให้เรานำมาใช้ในการรันคำสั่งต่อไปนี้เพื่อติด tag
 
 ```bash
-docker tag my-golang-project:latest <aws_account_id>.dkr.ecr.<region>.amazonaws.com/my-golang-project:latest
+docker tag my-golang-project:latest \
+    <aws_account_id>.dkr.ecr.<region>.amazonaws.com/my-golang-project:latest
 ```
 
 อย่าลืมแก้ไข `<aws_account_id>` และ `<region>`&#x20;
+
+
 
 
 
@@ -137,7 +170,9 @@ docker tag my-golang-project:latest <aws_account_id>.dkr.ecr.<region>.amazonaws.
 โดยการรันคำสั่ง :
 
 ```bash
-aws ecr get-login-password --region <region> | docker login --username AWS --password-stdin <aws_account_id>.dkr.ecr.<region>.amazonaws.com
+aws ecr get-login-password --region <region> \
+    | docker login --username AWS --password-stdin \
+    <aws_account_id>.dkr.ecr.<region>.amazonaws.com
 ```
 
 
@@ -163,11 +198,8 @@ docker push <aws_account_id>.dkr.ecr.<region>.amazonaws.com/my-golang-project:la
 
 <figure><img src="../.gitbook/assets/Screenshot 2024-02-03 at 15.12.03.png" alt=""><figcaption></figcaption></figure>
 
-3. ตั้งชื่อ function
-4. ส่วนช่อง "Container image URI" , วาง URI ของ ECR ที่คุณเพิ่ง Upload ไป
-
-> \<aws\_account\_id>.dkr.ecr..amazonaws.com/my-golang-project:latest
-
+3. ตั้งชื่อ function ในที่นี้เราตั้งชื่อ `myGolangProject`
+4. ส่วนช่อง "Container image URI" , วาง URI ของ ECR ที่คุณเพิ่ง Upload ไป หรือกดที่ Browse images
 5. กด "Create function".
 
 
@@ -187,10 +219,6 @@ docker push <aws_account_id>.dkr.ecr.<region>.amazonaws.com/my-golang-project:la
 ### ตั้งค่า API Gateway เพื่อเข้าถึง Lambda Function
 
 เพื่อให้ต้นทางนั้นเรียกน้อง Lambda function ของคุณได้, เรามาจัดการ API Gateway กัน
-
-#### การตั้งค่า API Gateway สำหรับ Lambda Function
-
-หลังจากที่เราสร้าง Lambda Function ด้วย Container Image เรียบร้อยแล้ว ต่อไปเราจะสร้าง API Gateway เพื่อทำการอนุญาตให้มีการเรียกใช้งานฟังก์ชันนี้ผ่าน HTTP Request.
 
 1. ไปที่หน้า **Amazon API Gateway** ใน AWS Console.
 2. กดปุ่ม **Create API** และเลือก **HTTP API** หรือ **REST API** ขึ้นอยู่กับความต้องการของคุณ.
