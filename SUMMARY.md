@@ -5,7 +5,7 @@
 ## 💖 Laravel ลูกรัก
 
 * [🌞 Service Provider คืออะไร ?](laravel/service-provider/README.md)
-  * [🙋♀ \[Laravel\] EventServiceProvider](laravel/service-provider/laravel-eventserviceprovider.md)
+  * [🙋♀ EventServiceProvider](laravel/service-provider/eventserviceprovider.md)
 * [วิธีการเก็บ Log Request และ Response ใน Laravel ผ่าน Middleware และ Events](laravel/log-request-response-laravel-middleware-events/README.md)
   * [เก็บ Log ทุกๆ requests ผ่าน Middleware - ตอนที่ 1](laravel/log-request-response-laravel-middleware-events/log-requests-middleware-1.md)
   * [Log http ทุกๆ requests ผ่าน Middleware - ตอนที่ 2](laravel/log-request-response-laravel-middleware-events/log-http-requests-middleware-2.md)
