@@ -13,7 +13,7 @@ description: มาตรฐานการใหม่สำหรับกา�
 ```php
 spl_autoload_register(function ($class) {
     // ฐานของ project (เช่น "src")
-    $base_dir = __DIR__ . '/src/';
+    $baseDir = __DIR__ . '/src/';
 
     // เนมสเปซของโปรเจ็ก (เช่น "MyProject")
     $prefix = 'MyProject\\';
@@ -25,10 +25,10 @@ spl_autoload_register(function ($class) {
     }
 
     // หาชื่อคลาสโดยที่นำ prefix ออก
-    $relative_class = substr($class, $len);
+    $relativeClass = substr($class, $len);
 
     // แทนที่ namespace separator ด้วย directory separator และเติม .php
-    $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
+    $file = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
 
     // ถ้าไฟล์อยู่จริง, ก็โหลดขึ้นมา
     if (file_exists($file)) {
