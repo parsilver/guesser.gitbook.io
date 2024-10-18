@@ -10,7 +10,7 @@
   * [เก็บ Log ทุกๆ requests ผ่าน Middleware - ตอนที่ 1](laravel/log-request-response-laravel-middleware-events/log-requests-middleware-1.md)
   * [Log http ทุกๆ requests ผ่าน Middleware - ตอนที่ 2](laravel/log-request-response-laravel-middleware-events/log-http-requests-middleware-2.md)
 * [Service Container](laravel/service-container.md)
-* [ทำความรู้จักกับ Livewire กัน](laravel/livewire.md)
+* [Livewire](laravel/livewire.md)
 
 ## 🐘 php
 
