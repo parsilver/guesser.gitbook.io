@@ -34,33 +34,83 @@ coverY: 0
 
 ### **สร้าง Project Golang**
 
-ผมจะยกตัวอย่าง Code ง่ายๆ ที่เรียกใช้งานผ่าน Http Request ได้เลย
+Project ของเราจะใช้ Fiber framework เพื่อจัดการ HTTP requests เนื่องจาก Fiber มีประสิทธิภาพสูงและ syntax ที่เข้าใจง่าย
+
+เริ่มต้นด้วยการสร้าง module และติดตั้ง dependencies:
+
+```bash
+go mod init my-golang-project
+go get github.com/gofiber/fiber/v2
+```
+
+สร้างไฟล์ main.go ด้วย code ต่อไปนี้:
 
 ```go
 package main
 
 import (
+	"context"
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/gofiber/fiber/v2"
+	"github.com/valyala/fasthttp"
 )
 
+var fiberApp *fiber.App
+
+func init() {
+    fiberApp = fiber.New()
+    
+    fiberApp.Get("/api/v1/example", func(c *fiber.Ctx) error {
+        return c.JSON(fiber.Map{
+            "message": "Hello from Lambda!",
+            "status": "success",
+        })
+    })
+}
+
+func handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+    // Convert API Gateway request to fasthttp request
+    fctx := &fasthttp.RequestCtx{}
+    fctx.Request.SetRequestURI(req.Path)
+    fctx.Request.Header.SetMethod(req.HTTPMethod)
+    
+    // Process the request through Fiber
+    err := fiberApp.Handler()(fctx)
+    if err != nil {
+        return events.APIGatewayProxyResponse{
+            StatusCode: 500,
+            Body:      "Internal Server Error",
+        }, nil
+    }
+    
+    // Convert fasthttp response to API Gateway response
+    return events.APIGatewayProxyResponse{
+        StatusCode: fctx.Response.StatusCode(),
+        Body:      string(fctx.Response.Body()),
+        Headers: map[string]string{
+            "Content-Type": string(fctx.Response.Header.ContentType()),
+        },
+    }, nil
+}
+
 func main() {
-	app := fiber.New()
-
-	app.Get("/api/v1/example", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
-	})
-
-	app.Listen(":3000")
+    lambda.Start(handler)
 }
 ```
 
-ส่วนโครงสร้างของ Folder structure project จะมีตามนี้
+อัพเดท go.mod เพื่อเพิ่ม dependencies ที่จำเป็น:
 
-```
-.
-├── go.mod
-├── go.sum
-├── main.go
+```go
+module my-golang-project
+
+go 1.21
+
+require (
+    github.com/aws/aws-lambda-go v1.46.0
+    github.com/gofiber/fiber/v2 v2.52.0
+    github.com/valyala/fasthttp v1.51.0
+)
 ```
 
 
@@ -281,4 +331,37 @@ docker push <aws_account_id>.dkr.ecr.<region>.amazonaws.com/my-golang-project:la
 ท่านก็จะได้ Invoke URL ในส่วนของ "Stages" เป็นที่เรียบร้อยแล้ว
 
 คุณสามารถเอา URL ที่ได้มาทดลองได้เลย
+
+
+
+### การทดสอบ Lambda Function
+
+หลังจาก deploy แล้ว คุณสามารถทดสอบ endpoint ได้ด้วย curl:
+
+```bash
+curl https://your-api-gateway-url/api/v1/example
+```
+
+ผลลัพธ์ที่ได้ควรจะเป็น:
+
+```json
+{
+    "message": "Hello from Lambda!",
+    "status": "success"
+}
+```
+
+### การ Monitor และ Debug
+
+Lambda function ของคุณจะส่ง logs ไปยัง CloudWatch โดยอัตโนมัติ คุณสามารถดู logs ได้ที่:
+
+1. เข้าไปที่ CloudWatch ใน AWS Console
+2. ไปที่ Log groups
+3. ค้นหา log group ที่มีชื่อขึ้นต้นด้วย "/aws/lambda/myGolangProject"
+
+สำหรับการ monitor performance คุณสามารถดูค่าต่างๆ ได้ที่:
+- Execution duration
+- Memory usage
+- Concurrent executions
+- Error count
 
