@@ -1,5 +1,5 @@
 ---
-description: ทำความรู้จักกับ Livewire กัน
+description: เริ่มต้นใช้งาน Laravel Livewire — สร้าง interactive UI ด้วย PHP โดยไม่ต้องเขียน JavaScript มากมาย
 ---
 
 # Livewire

@@ -1,5 +1,5 @@
 ---
-description: ผู้ให้บริการเรื่องการรับสารต่างๆจากพระเจ้า
+description: จัดการ Event และ Listener ใน Laravel ด้วย EventServiceProvider พร้อมตัวอย่าง Observer Pattern
 ---
 
 # 🙋♀ EventServiceProvider
@@ -132,7 +132,7 @@ class CustomerRegistrationController extends Controller
 ```
 {% endcode %}
 
-ในที่นี้เราส่ง event `Registered` ไปให้กับระบบ เราเรียก Design Pattern นี้ว่า "Observer Pattern" 
+ในที่นี้เราส่ง event `CustomerRegistered` ไปให้กับระบบ เราเรียก Design Pattern นี้ว่า "Observer Pattern" 
 
 ช่วยให้เราสามารถแยกการทำงานของแต่ละส่วนออกจากกันได้ และทำให้ระบบของเรามีความยืดหยุ่นมากขึ้น
 

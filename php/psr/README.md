@@ -2,60 +2,37 @@
 
 PSR ย่อมาจาก PHP Standard Recommendation
 
-เป็นกลุ่มของมาตรฐานการเขียนโค้ด PHP ที่ถูกสร้างขึ้นโดยกลุ่ม PHP-FIG (Framework Interoperability Group).&#x20;
+เป็นกลุ่มของมาตรฐานการเขียนโค้ด PHP ที่ถูกสร้างขึ้นโดยกลุ่ม PHP-FIG (Framework Interoperability Group).
 
-มาตรฐานเหล่านี้ถูกออกแบบมาเพื่อให้ผู้พัฒนาสามารถเขียนโค้ดที่สามารถทำงานร่วมกันได้ในระดับที่สูงขึ้น&#x20;
+มาตรฐานเหล่านี้ถูกออกแบบมาเพื่อให้ผู้พัฒนาสามารถเขียนโค้ดที่สามารถทำงานร่วมกันได้ในระดับที่สูงขึ้น
 
 และเพื่อให้โค้ดที่เขียนมามีความเข้ากันได้.
 
-### ตัวอย่างของ PSR
+### ตัวอย่างของ PSR ที่ครอบคลุมในบล็อกนี้
 
 #### PSR-1: Basic Coding Standard
 
-PSR-1 คือมาตรฐานเริ่มต้นในการเขียนโค้ด ซึ่งประกอบไปด้วยกฏคือ
+มาตรฐานเริ่มต้นในการเขียนโค้ด เช่น ชื่อ class ต้องเป็น StudlyCaps, method ต้องเป็น camelCase, ใช้ tags `<?php` หรือ `<?=`
 
-* โค้ดควรใช้ tags `<?php` หรือ `<?=`
-* โค้ดควรเขียนหรืออยู่ใน format UTF-8 ด้วย
-* ชื่อ Class ควรเป็น StudlyCaps (ตัวแรกตัวใหญ่ ไม่มีอักขระ)
-* ชื่อ Method ควรเป็น camelCase (ตัวแรกตัวเล็ก ไม่มีอักขระ)
+#### PSR-3: Logger Interface
+
+มาตรฐานสำหรับ logger — กำหนด 8 log levels (emergency ถึง debug) ให้เปลี่ยน logger ได้โดยไม่ต้องแก้โค้ด Laravel ใช้ PSR-3 ผ่าน Monolog อยู่เบื้องหลัง
 
 #### PSR-4: Autoloader
 
-PSR-4 คือมาตรฐานสำหรับการสร้าง autoloader ซึ่งจะช่วยในการโหลด class โดยอัตโนมัติเมื่อ class นั้นถูกเรียกใช้งาน.
+มาตรฐานสำหรับการโหลด class อัตโนมัติ ใช้กับ Composer ที่เราใช้กันอยู่ทุกวัน
 
-ยกตัวอย่างเช่น
+#### PSR-11: Container Interface
 
-เราเขียน Class และวางไว้ที่ src/MyClass.php
+มาตรฐานสำหรับ Dependency Injection Container — กำหนดว่าจะดึง service ออกมาจาก container ยังไง Laravel Service Container implement PSR-11 อยู่แล้ว
 
-```php
-<?php
-// file: src/MyClass.php
+#### PSR-12: Extended Coding Style
 
-namespace MyNamespace;
+มาตรฐานการจัดรูปแบบโค้ดที่ใช้กันในปัจจุบัน (แทนที่ PSR-2) ครอบคลุม indentation, spacing, brace placement และอื่นๆ
 
-class MyClass {
-    // code...
-}
+#### PSR-0: Autoloader (Deprecated)
 
-```
-
-การเรียกใช้งาน ต้องผ่าน Autoloader เท่านั้น !!!
-
-```php
-<?php
-// file: test.php
-
-require 'vendor/autoload.php';
-
-use MyNamespace\MyClass;
-
-$obj = new MyClass();
-
-```
-
-เมื่อเราสร้าง object จาก class MyClass, autoloader จะโหลด file src/MyClass.php โดยอัตโนมัติ.
-
-
+มาตรฐาน autoloader ตัวเก่าที่ถูกแทนที่ด้วย PSR-4 แล้ว ไม่แนะนำให้ใช้ในโปรเจกต์ใหม่
 
 ### สรุปแล้ว ทำไมเราต้องใช้ PSR?
 
@@ -66,4 +43,3 @@ $obj = new MyClass();
 * ง่ายต่อการอ่าน
 * จัดการ structure ได้ง่าย
 * ง่ายต่อการบำรุงรักษา สามารถพัฒนาต่อยอดในอนาคตได้
-

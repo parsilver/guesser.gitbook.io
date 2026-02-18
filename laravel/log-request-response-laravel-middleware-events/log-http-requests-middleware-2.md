@@ -1,5 +1,5 @@
 ---
-description: Requirement เปลี่ยนว่ะเพื่อน ทำไงดี
+description: เมื่อ Requirement เปลี่ยน — ใช้ Decorator Pattern จัดการ Log แบบยืดหยุ่น
 ---
 
 # Log http ทุกๆ requests ผ่าน Middleware - ตอนที่ 2
@@ -31,8 +31,8 @@ class DatabaseLogger implements HttpLoggerContract
      */
     public function write(Request $request, $response)
     {
-        if (! $request->method("POST")) {
-            return
+        if (! $request->isMethod("POST")) {
+            return;
         }
 
         DB::table('http_log_requests')->insert([
@@ -42,7 +42,7 @@ class DatabaseLogger implements HttpLoggerContract
 }
 ```
 
-จบเแล้วครับ
+จบแล้วครับ
 
 แต่คุณๆครับๆ, แบบนี้ ถ้าเราเพิ่มวิธีเก็บแบบอื่นขึ้นมา เราต้องเอา condition นี้ไปด้วย จริงมั้ยครับ
 
@@ -83,7 +83,7 @@ class WriteOnlyPostMethodHttpLoggerDecorator implements HttpLoggerContract
 {
     protected $logger;
 
-    public function __construct(HttpLogger $logger)
+    public function __construct(HttpLoggerContract $logger)
     {
         $this->logger = $logger;
     }
@@ -97,7 +97,7 @@ class WriteOnlyPostMethodHttpLoggerDecorator implements HttpLoggerContract
 
     protected function shouldLog(Request $request, $response)
     {
-        return $request->method('post');
+        return $request->isMethod('POST');
     }
 }
 

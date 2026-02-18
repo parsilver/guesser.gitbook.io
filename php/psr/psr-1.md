@@ -1,8 +1,8 @@
 ---
-description: มาตรฐานโค้ต
+description: มาตรฐานโค้ด
 ---
 
-# PSR-1 มาตรฐานของโค้ต
+# PSR-1 มาตรฐานของโค้ด
 
 #### PSR-1: Basic Coding Standard
 

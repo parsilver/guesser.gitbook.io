@@ -1,8 +1,10 @@
 ---
-description: ข้าคือผู้ให้บริการระบบของทุกสรรพสิ่ง
+description: ทำความเข้าใจ Service Provider ใน Laravel — วิธีใช้งาน register(), boot() พร้อมตัวอย่างจริง
 ---
 
 # 🌞 Service Provider คืออะไร ?
+
+> 📌 บทความนี้เขียนสำหรับ Laravel 10.x (ใช้ได้กับ Laravel 11 เช่นกัน)
 
 **ServiceProvider**&#x20;
 
